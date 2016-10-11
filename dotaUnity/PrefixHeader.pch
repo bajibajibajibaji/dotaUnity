@@ -1,0 +1,77 @@
+//
+//  PrefixHeader.pch
+//  dotaUnity
+//
+//  Created by admin on 16/4/26.
+//  Copyright © 2016年 cc_company. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+/** vendor header*/
+#import <AFNetworking.h>
+#import <YYModel.h>
+#import <CocoaLumberjack/CocoaLumberjack.h>
+#import <UIImageView+WebCache.h>
+#import <MJRefresh.h>
+#import <HMSegmentedControl.h>
+#import <SwipeView.h>
+#import "KxMovieViewController.h"
+
+/** local header */
+#import "NSObject+VendorYYModel.h"
+#import "NSObject+VendorAFNetworking.h"
+#import "NSString+stringHeight.h"
+#import "NSAttributedString+stringHeight.h"
+#import "UITableView+VendorMJRefresh.h"
+#import "UICollectionView+VendorMJRefresh.h"
+#import "UIWebView+VendorMJRefresh.h"
+#import "UIImageView+gradualChange.h"
+
+#import "BJNetManager.h"
+#import "BJDota2NewsUnity.h"
+#import "BJCommentsUnity.h"
+#import "BJVideoHistoryViewModel.h"
+
+/** macro */
+#define YYModelOverrideMethod \
+- (void)encodeWithCoder:(NSCoder *)aCoder { [self yy_modelEncodeWithCoder:aCoder]; } \
+- (id)initWithCoder:(NSCoder *)aDecoder { self = [super init]; return [self yy_modelInitWithCoder:aDecoder]; } \
+- (id)copyWithZone:(NSZone *)zone { return [self yy_modelCopy]; } \
+- (NSUInteger)hash { return [self yy_modelHash]; } \
+- (BOOL)isEqual:(id)object { return [self yy_modelIsEqual:object]; } \
+- (NSString *)description { return [self yy_modelDescription]; }
+
+#define ws(weakSelf) __weak __typeof(&*self) weakSelf = self
+
+
+/** 定义日志级别 */
+//static const int ddLogLevel = DDLogLevelVerbose;// 定义日志级别
+#define ddLogLevel DDLogLevelVerbose
+
+/** URL */
+#define NEWSLISTURL(OFFSET) [NSString stringWithFormat:@"http://news.maxjia.com:80/maxnews/app/list/?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=1461572295&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2&limit=30&offset=%ld&userid=2547624", OFFSET]
+#define NEWSURLDETAIL(NEWSID) [NSString stringWithFormat:@"http://news.maxjia.com/maxnews/app/detail/dota2/%@?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=1461572353&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2", NEWSID]
+#define COMMENTSURL(LIMIT,NEWSID) \
+    [NSString stringWithFormat:@"http://news.maxjia.com:80/maxnews/comment/getcomment/?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=1461589957&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2&limit=%ld&newsid=%@", LIMIT, NEWSID]
+
+//直播房间列表
+#define LIVELIST(LIMIT, OFFSET) [NSString stringWithFormat:@"http://api.maxjia.com:80/api/live/list/?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=1461572995&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2&limit=%ld&offset=%ld", LIMIT, OFFSET]
+
+// 获取直播url
+#define LIVEURL(LIVEID, TIME) [NSString stringWithFormat:@"http://api.maxjia.com:80/api/live/detail/v2/?live_type=douyu&live_id=%@&lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=%@&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2", LIVEID, TIME]
+
+// 视频列表
+#define VIDEOLIST(TIME, LIMIT, OFFSET) [NSString stringWithFormat:@"http://api.maxjia.com:80/api/video/list/?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=%@&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2&dm_uid=hot_all&limit=%ld&offset=%ld", TIME, LIMIT, OFFSET]
+
+// 解说列表
+#define GIREFLIST(TIME) [NSString stringWithFormat:@"http://api.maxjia.com:80/api/video/user_list/v2/?lang=zh-cn&phone_num=18071415257&pkey=MTQ2MTUxNDg4OS4xMjE4MDcxNDE1MjU3XzFrYnRvbmFvZWJuZHVzbnVy&os_type=iOS&os_version=9.3.1&_time=%@&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2", TIME]
+
+// 解说视频列表
+#define GIREFDETAILLIST(TIME, GIREFNAME, LIMIT, OFFSET) [NSString stringWithFormat:@"http://api.maxjia.com:80/api/video/list/?lang=zh-cn&phone_num=00000000000&pkey=randpkey&os_type=iOS&os_version=9.3.1&_time=%@&version=3.3.3&device_id=CA5B1985-CD8A-4040-BBA3-15D3286B7C75&game_type=dota2&dm_uid=%@&limit=%ld&offset=%ld", TIME, GIREFNAME, LIMIT, OFFSET]
+
+#endif /* PrefixHeader_pch */
